@@ -39,7 +39,6 @@
             background-color: var(--panel-bg);
             border: 2px solid var(--border-red);
             box-shadow: 0 0 20px var(--red-glow);
-            border-radius: 0px;
             display: flex;
             flex-direction: column;
         }
@@ -93,7 +92,6 @@
             padding: 14px 10px;
             outline: none;
             letter-spacing: 1px;
-            border-radius: 0px;
         }
 
         .status-msg {
@@ -108,7 +106,6 @@
             font-size: 13px;
             font-weight: bold;
             cursor: pointer;
-            border-radius: 0px;
             outline: none;
             transition: all 0.2s ease;
             text-transform: uppercase;
@@ -144,7 +141,7 @@
 <div class="key-container">
     <div class="key-header">
         <div><span class="status-dot"></span>TERMINUX KEY GENERATOR</div>
-        <div>[READY]</div>
+        <div>[ONLINE]</div>
     </div>
 
     <div class="key-body">
@@ -164,59 +161,54 @@
     </div>
 </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
-    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-database.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyBbakrOVPpA2gEtVAJJ--yxZi8N7iGg8R0",
-        authDomain: "dung-online.firebaseapp.com",
-        databaseURL: "https://sharehub-feee9-default-rtdb.firebaseio.com",
-        projectId: "dung-online",
-        storageBucket: "dung-online.firebasestorage.app",
-        messagingSenderId: "544119334753",
-        appId: "1:544119334753:web:813f1ec13c4415e841c720",
-        measurementId: "G-M40B1EE5FV"
-    };
-
+<script>
     const generatedKeyInput = document.getElementById('generatedKeyInput');
     const copyKeyBtn = document.getElementById('copyKeyBtn');
     const backHomeBtn = document.getElementById('backHomeBtn');
     const statusMsg = document.getElementById('statusMsg');
 
     const ORIGIN_URL = "https://cheatfreefireios.github.io/teminux-freefire-/";
+    const DATABASE_URL = "https://sharehub-feee9-default-rtdb.firebaseio.com";
 
-    function generateRandomString(length = 8) {
+    // Sinh mã ngẫu nhiên dạng teminux-XXXXXX
+    function generateRandomKey() {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         let result = '';
-        for (let i = 0; i < length; i++) {
+        for (let i = 0; i < 8; i++) {
             result += chars.charAt(Math.floor(Math.random() * chars.length));
         }
         return `teminux-${result}`;
     }
 
     async function initAndSaveKey() {
-        const newKey = generateRandomString(8);
-        generatedKeyInput.value = newKey; // Hiện key ngay lập tức không bị kẹt
+        const newKey = generateRandomKey();
+        generatedKeyInput.value = newKey; // Hiện ngay lập tức, tuyệt đối không bị kẹt
+        statusMsg.style.color = '#ffaa33';
+        statusMsg.innerText = '[+] Đang lưu key lên máy chủ Firebase...';
 
         try {
-            statusMsg.style.color = '#ffaa33';
-            statusMsg.innerText = '[+] Đang lưu key lên máy chủ...';
-
-            const app = initializeApp(firebaseConfig);
-            const db = getDatabase(app);
-
-            await set(ref(db, 'rootver_codes/' + newKey), {
-                created_at: new Date().toISOString(),
-                status: 'active',
-                source: 'auto_getkey'
+            // Dùng REST API fetch trực tiếp không cần load SDK rườm rà
+            const response = await fetch(`${DATABASE_URL}/rootver_codes/${newKey}.json`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    created_at: new Date().toISOString(),
+                    status: 'active',
+                    source: 'auto_getkey'
+                })
             });
-            
-            statusMsg.style.color = '#33ff77';
-            statusMsg.innerText = '[✓] Key đã được lưu thành công trên Server!';
+
+            if (response.ok) {
+                statusMsg.style.color = '#33ff77';
+                statusMsg.innerText = '[✓] Key đã được lưu thành công trên Server!';
+            } else {
+                throw new Error('Server từ chối lưu');
+            }
         } catch (error) {
-            console.error(error);
-            // Vẫn cho phép hiển thị và copy key để dùng ngay cả khi mạng lỗi/chặn firebase
+            console.log("Lưu server phụ, dùng key offline:", error);
+            // Dù lỗi mạng hay Firebase rules chặn, key vẫn được hiển thị để người dùng dùng bình thường
             statusMsg.style.color = '#33ff77';
             statusMsg.innerText = '[✓] Key đã sẵn sàng để sử dụng!';
         }
@@ -245,6 +237,7 @@
         window.location.href = ORIGIN_URL;
     });
 
+    // Chạy ngay khi tải xong trang
     window.addEventListener('DOMContentLoaded', initAndSaveKey);
 </script>
 
