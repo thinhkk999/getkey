@@ -1,0 +1,132 @@
+:root {
+    --bg-color: #050505;
+    --panel-bg: #0d0000;
+    --border-red: #ff0000;
+    --red-glow: #ff0000aa;
+    --text-red: #ff3333;
+    --text-dim: #aa2222;
+    --white: #ffffff;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-red);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    overflow: hidden;
+}
+
+.key-container {
+    width: 100%;
+    max-width: 450px;
+    background-color: var(--panel-bg);
+    border: 2px solid var(--border-red);
+    box-shadow: 0 0 20px var(--red-glow);
+    border-radius: 0px; /* Góc vuông tuyệt đối */
+    display: flex;
+    flex-direction: column;
+}
+
+.key-header {
+    background-color: #1a0000;
+    border-bottom: 2px solid var(--border-red);
+    padding: 10px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+.status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: var(--border-red);
+    box-shadow: 0 0 8px var(--border-red);
+    margin-right: 8px;
+}
+
+.key-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-align: center;
+}
+
+.info-text {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #ff9999;
+    text-align: left;
+    border-left: 2px solid var(--border-red);
+    padding-left: 10px;
+}
+
+.key-display-box input {
+    width: 100%;
+    background-color: #000000;
+    border: 2px dashed var(--border-red);
+    color: var(--white);
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    padding: 14px 10px;
+    outline: none;
+    letter-spacing: 1px;
+    border-radius: 0px;
+}
+
+.status-msg {
+    font-size: 12px;
+    min-height: 16px;
+    color: #33ff77;
+}
+
+.btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 0px;
+    outline: none;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+}
+
+.copy-btn {
+    background-color: #330000;
+    border: 2px solid var(--border-red);
+    color: var(--text-red);
+    box-shadow: 0 0 10px var(--red-glow);
+}
+
+.copy-btn:hover {
+    background-color: var(--border-red);
+    color: #000000;
+}
+
+.back-btn {
+    background-color: #111111;
+    border: 2px solid #555555;
+    color: #cccccc;
+}
+
+.back-btn:hover {
+    background-color: #ffffff;
+    border-color: #ffffff;
+    color: #000000;
+}
